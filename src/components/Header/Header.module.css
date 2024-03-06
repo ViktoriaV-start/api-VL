@@ -1,0 +1,59 @@
+
+.str0 {
+  stroke: #4a7989;
+  stroke-width: 0.39;
+  stroke-miterlimit: 22.9256;
+}
+
+.fil1 {
+  fill: #FFDBB8;
+}
+
+.fil2 {
+  fill: #e6c6a7;
+}
+
+.fil0 {
+  fill: #4a7989;
+}
+
+.fil3 {
+  fill:#6e8e99;
+}
+
+.fil4 {
+  fill: #3c616d;
+}
+
+.svg {
+  margin-left: 2%;
+  shape-rendering:geometricPrecision;
+  text-rendering:geometricPrecision;
+  image-rendering:optimizeQuality;
+  fill-rule:evenodd;
+  clip-rule:evenodd;
+  width: 5rem;
+  height: 6rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+}
+
+.header__wrap{
+  background-color: #f0f8ff;
+}
+
+.header__title {
+	font-family: 'Montserrat', sans-serif;
+  margin-left: 2rem;
+  font-size: 2rem;
+  font-weight: 900;
+  color: #4a7989;
+}
+
+.header__logo {
+  display: flex;
+  align-items: center;
+}

@@ -1,0 +1,19 @@
+.table__tr {
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.table__data, .table__product {
+  background: #ffffff;
+  padding: 1rem 0.4rem;
+  text-align: center;
+  width: 14vw;
+}
+
+.table__product {
+	text-align: left;
+	padding-left: 2rem;
+}
+
+.table__sp {
+  background-color: #E0FFBD;
+}

@@ -1,0 +1,8 @@
+.admin__container {
+	display: flex;
+	justify-content: center;
+}
+
+.main {
+	padding-bottom: 5rem;
+}

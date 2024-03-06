@@ -1,0 +1,15 @@
+.table {
+	width: 100vw;
+	max-width: 1200px;
+}
+
+.table__wrap {
+	width: 100vw;
+	max-width: 1200px;
+  border-radius: 15px;
+  margin-top: 1rem;
+  background-color: #f7fafc;
+  box-shadow: -2px 4px 8px 1px rgb(119, 157, 184);;
+  position: relative;
+}
+

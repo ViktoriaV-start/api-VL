@@ -1,0 +1,12 @@
+.table__header {
+  border-bottom: 2px solid #e5e8eb;
+}
+
+.table__text {
+  text-align: center;
+  padding: 1.5rem 0 0.7rem 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #4d4949;
+}
+
