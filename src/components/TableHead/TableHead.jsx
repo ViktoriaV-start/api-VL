@@ -1,7 +1,8 @@
+import { memo } from 'react';
 import styles from './TableHead.module.css';
 
-export const TableHead = () => {
-
+export const TableHead = memo(function TableHead() {
+	console.log('Загрузка TableHead');
 	return (
 		<thead>
 			<tr className={ styles['table__header'] }>
@@ -18,4 +19,4 @@ export const TableHead = () => {
 			</tr>
 		</thead>
 	);
-};
+});
