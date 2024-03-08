@@ -1,0 +1,23 @@
+.input {
+	height: 40px;
+	border: none;
+	border-radius: 5px;
+	max-width: 572px;
+	width: 100%;
+	font-size: 1rem;
+	color: #4a7989;
+	padding-left: 1rem;
+}
+
+.input::placeholder {
+	color: #c8cece;
+	font-weight: 300;
+}
+
+.input:focus-visible {
+	outline: none;
+}
+
+.invalid {
+	background-color: #d7f0f6;
+}

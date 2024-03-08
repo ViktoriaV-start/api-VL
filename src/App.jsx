@@ -2,23 +2,26 @@ import { md5 } from 'js-md5';
 
 
 import './App.css';
-import { useEffect, useMemo, useState } from 'react';
-import { LIMIT, PAGINATION_QUANTITY, PASSWORD } from './config/constants';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { EMPTY_FILTER, LIMIT, PAGINATION_QUANTITY, PASSWORD } from './config/constants';
 import { useFetching } from './hooks/useFetching';
 import { GetDataService } from './api/GetDataService';
 import { Header } from './components/Header/Header';
 import { ContentContext } from './context/ContentContext';
 import { Table } from './components/Table/Table';
-import { Information } from './components/Table/Information/Information';
+
 import { Pagination } from './components/Pagination/Pagination';
+import { Filter } from './components/Filter/Filter';
+import { Information } from './components/Information/Information';
 
 function App() {
-	const [productsQuantity, setProductsQuantity] = useState(0);
 	const [totalPages, setTotalPages] = useState(0);
-	const [productsId, setProductsId] = useState([]);
+	const [productsIds, setProductsIds] = useState([]);
+	const [currentProductsIds, setCurrentProductsIds] = useState([]);
 	const [currentContent, setCurrentContent] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pagesToDisplay, setPagesToDisplay] = useState([]);
+	const [emptyFilter, setEmptyFilter] = useState('');
 
 
 
@@ -28,88 +31,91 @@ function App() {
 		return md5(PASSWORD + timestamp);
 	}, []);
 
-	// async function getData1(url = 'http://api.valantis.store:40000/') {
-
-	// 	try{
-	// 		const response = await fetch(url, {
-	// 			method: 'POST',
-	// 			headers: {
-	// 				'Content-Type': 'application/json',
-	// 				'X-Auth': xAuth,
-	// 			},
-
-	// 			body: JSON.stringify({
-	// 				// 'action': 'get_fields',
-	// 				'action': 'get_ids',
-
-	// 			}),
-	// 		});
-
-	// 		if(!response.ok) {
-	// 			console.log('Ошибка при загрузке');
-	// 		}
-
-	// 		console.log(response);
-	// 		return await response.json();
-
-	// 	} catch (er) {
-	// 		console.warn(er);
-	// 	}
-	// }
-
-	//getData1().then((data) => console.log(data));
-
 	const {
 		fetching,
 		isLoading,
 		error,
 	} = useFetching(async (body) => {
 		const result = await GetDataService.getData(xAuth, body);
-
 		if (result) {
 			return result.result;
-		}
-		if(error) {
-			console.log(error);
 		}
 	});
 
 	useEffect(() => {
-		console.log('Загрузка Ids');
-		fetching({'action': 'get_ids'})
-			.then((data) => {
-				setProductsId(Array.from(new Set(data)));
-				setProductsQuantity(data.length);
-				setTotalPages(Math.ceil(data.length/LIMIT));
+		if(error) loadPage();
+	}, [error]);
+
+	const filter = useCallback(({ field, value }) => {
+
+		setEmptyFilter('');
+		
+		fetching({
+			'action': 'filter',
+			'params': { [field]: value, }
+		})
+			.then(data => {
+				if (data && data.length) {
+					const ids = Array.from(new Set(data));
+					console.log(data);
+					setCurrentContent([]);
+					setCurrentPage(1);
+					setTotalPages(getTotalPages(data.length));
+					setCurrentProductsIds(ids);
+				} else {
+					setEmptyFilter(EMPTY_FILTER);
+				}
 			});
 	}, []);
 
-	useEffect(() => {
+	const loadProductsIds = () => {
+		fetching({'action': 'get_ids'})
+			.then((data) => {
+				if(data && data.length) {
+					const ids = Array.from(new Set(data));
+					setProductsIds(ids);
+					setCurrentProductsIds(ids);
+					console.log(data.length);
+					setTotalPages(getTotalPages(data.length));
+				}
+			});
+	};
 
-		if (productsId.length) {
+	useEffect(() => {
+		console.log('LOAD');
+		loadPage();
+	}, [currentProductsIds, currentPage]);
+
+	const loadPage = () => {
+		if (!productsIds.length) {
+			console.log('Загрузка Ids');
+			loadProductsIds();
+		}
+
+		if (currentProductsIds.length) {
 
 			setCurrentContent([]);
 			const startIdx = (currentPage - 1) * LIMIT;
 			const endIdx = currentPage * LIMIT;
-			console.log('Загрузка страницы: ', currentPage);
+			console.log('Загрузка страницы: ', currentPage, currentProductsIds.length);
 			fetching({'action': 'get_items',
-				'params': {'ids': [...productsId.slice(startIdx, endIdx)] }})
+				'params': {'ids': [...currentProductsIds.slice(startIdx, endIdx)] }})
 				.then((data) => {
-					for (let elem of data) {
-						setCurrentContent(prev => {
-							if(prev.find(item => item.id == elem.id)) return [...prev];
-							return [...prev, {...elem}];
-						});
+					if(data && data.length) {
+						for (let elem of data) {
+							setCurrentContent(prev => {
+								if(prev.find(item => item.id == elem.id)) return [...prev];
+								return [...prev, {...elem}];
+							});
+						}
 					}
+
 				});
 		}
-
-	}, [productsId, currentPage]);
-
-
+	};
 
 	useEffect(() => {
-
+		console.log('Текущая страница: ', currentPage);
 
 		if (totalPages == 1) setPagesToDisplay([]);
 
@@ -152,33 +158,31 @@ function App() {
 		}
 
 
-	}, [currentPage, totalPages]);
+	}, [currentPage, totalPages, currentProductsIds]);
+
+	const getTotalPages = (value) => {
+		return Math.ceil(value/LIMIT);
+	};
 
 
 	return (
 		<>
 			<Header />
-			
+			<Filter filter={filter} setEmptyFilter={setEmptyFilter} />
+
+			<Information isLoading={isLoading} error={error} emptyFilter={emptyFilter} />
+
 			<main className="main">
 				<section className="admin__container">
 					<ContentContext.Provider value={currentContent}>
-						<Table />
+						{!isLoading && !emptyFilter && currentContent.length && <Table />}
 					</ContentContext.Provider>
 
 				</section>
 
 			</main>
 
-			<Information isLoading={isLoading} error={error} />
-
-			{!isLoading && <Pagination pagesToDisplay={pagesToDisplay} totalPages={totalPages} currentPage={currentPage} setPage={setCurrentPage} />}
-				
-
-			<p>{totalPages}</p>
-
-
-
-
+			{!isLoading && !emptyFilter && currentContent.length && <Pagination pagesToDisplay={pagesToDisplay} totalPages={totalPages} currentPage={currentPage} setPage={setCurrentPage} />}
 
 		</>
 	);

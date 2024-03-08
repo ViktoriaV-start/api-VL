@@ -1,0 +1,15 @@
+.select {
+	width: 130px;
+	height: 40px;
+	border-radius: 5px;
+	font-size: 14px;
+	border: none;
+}
+
+.select:focus-visible {
+	outline: none;
+}
+
+.invalid {
+	background-color: #d7f0f6;
+}

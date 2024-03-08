@@ -13,9 +13,8 @@ export const useFetching = (fn) => {
 			setIsLoading(true);
 			setError('');
 			return await fn(...args);
-
-			
 		} catch (error) {
+			console.log('ОШИБКА ПРИ ЗАГРУЗКЕ : ', error);
 			setError(error.message);
 		} finally {
 			setIsLoading(false);

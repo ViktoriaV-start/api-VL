@@ -18,6 +18,13 @@ export const Pagination = ({ pagesToDisplay, totalPages, currentPage, setPage })
 		case 'page':
 			setPage(+e.target.getAttribute('data-id'));
 			break;
+		case 'ldots':
+			setPage(pagesToDisplay[0] - 1);
+
+			break;
+		case 'rdots':
+			setPage(pagesToDisplay[4] + 1);
+			break;
 			
 		}
 
@@ -41,7 +48,7 @@ export const Pagination = ({ pagesToDisplay, totalPages, currentPage, setPage })
 			}
 
 			{(pagesToDisplay[0] > 1) && 
-			<div className={styles['pagination__dots']}>.........</div>
+			<div data-name="ldots" onClick={handleNextClick} className={styles['pagination__page']}>.........</div>
 			}
 
 			{pagesToDisplay.map(item => <button key={item} type="button"
@@ -62,7 +69,7 @@ export const Pagination = ({ pagesToDisplay, totalPages, currentPage, setPage })
 			)}
 
 			{(pagesToDisplay[4] <= totalPages - PAGINATION_QUANTITY) && 
-			<div className={styles['pagination__dots']}>.........</div>
+			<div data-name="rdots" onClick={handleNextClick} className={styles['pagination__page']}>.........</div>
 			}
 
 			{!!pagesToDisplay.length && (currentPage != totalPages) && 

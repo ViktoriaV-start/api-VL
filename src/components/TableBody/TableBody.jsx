@@ -3,9 +3,10 @@ import styles from './TableBody.module.css';
 import { ContentContext } from '../../context/ContentContext';
 
 export const TableBody = () => {
-	console.log('Загрузка TableBody');
+
 
 	const content = useContext(ContentContext);
+	console.log('Загрузка TableBody', content.length);
 
 	const getPriceString = (num) => {
 		return new Intl.NumberFormat('ru-RU').format(num);
