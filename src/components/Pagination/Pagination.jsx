@@ -61,7 +61,7 @@ export const Pagination = ({ pagesToDisplay, totalPages, currentPage, setPage })
 			</button>
 			)}
 
-			{(pagesToDisplay[4] < totalPages) && 
+			{(pagesToDisplay[pagesToDisplay.length - 1] < totalPages) && 
 			<div data-name="rdots" onClick={handleNextClick} className={styles['pagination__page']}>.........</div>
 			}
 
