@@ -1,6 +1,5 @@
 import styles from './Pagination.module.css';
 import cn from 'classnames';
-import { PAGINATION_QUANTITY } from '../../config/constants';
 
 
 export const Pagination = ({ pagesToDisplay, totalPages, currentPage, setPage }) => {
@@ -62,7 +61,7 @@ export const Pagination = ({ pagesToDisplay, totalPages, currentPage, setPage })
 			</button>
 			)}
 
-			{(pagesToDisplay[4] <= totalPages - PAGINATION_QUANTITY) && 
+			{(pagesToDisplay[4] < totalPages) && 
 			<div data-name="rdots" onClick={handleNextClick} className={styles['pagination__page']}>.........</div>
 			}
 
