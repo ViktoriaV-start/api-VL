@@ -2,8 +2,8 @@ import { forwardRef, useImperativeHandle, useState } from 'react';
 import cn from 'classnames';
 import styles from './Select.module.css';
 
+
 export const Select = forwardRef(function Select({ isValid }, ref) {
-	console.log('Загрузка Select');
 	const [selectValue, setSelectValue] = useState('default');
 
 	const handleChangeSelect = (ev) => {

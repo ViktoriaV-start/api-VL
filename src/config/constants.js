@@ -5,3 +5,4 @@ export const PASSWORD = 'Valantis_';
 export const TEXT_ERROR = 'Ошибка при загрузке. Попробуйте повторить позже.';
 export const PAGINATION_QUANTITY = 5;
 export const EMPTY_FILTER = 'Не найдено. Попробуйте изменить запрос.';
+export const TABLE_TITLE = { 'catalog': 'Каталог', 'filter': 'Результат поиска'};

@@ -3,7 +3,6 @@ import styles from './Header.module.css';
 
 
 export const Header = memo(function Header() {
-	console.log('HEADER');
 
 	return (
 		<header className={ styles['header__wrap'] }>

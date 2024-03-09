@@ -4,8 +4,8 @@ import { Button } from '../Button/Button';
 import { Input } from '../Input/Input';
 import { Select } from '../Select/Select';
 
-export const Filter = memo(function Filter({ filter, setEmptyFilter }) {
-	console.log('Загрузка Filter');
+
+export const Filter = memo(function Filter({ filter, setEmptyFilter, emptyFilter, returnToCatalog }) {
 
 	const [isValidForm, setIsValidForm] = useState({ select: true, input: true });
 
@@ -17,7 +17,7 @@ export const Filter = memo(function Filter({ filter, setEmptyFilter }) {
 		const formData = new FormData(ev.target);
 		const formProps = Object.fromEntries(formData);
 		let isValid = true;
-		
+
 		for (let key in formProps) {
 			formProps[key] = formProps[key].trim();
 			if(!formProps[key]) {
@@ -52,6 +52,10 @@ export const Filter = memo(function Filter({ filter, setEmptyFilter }) {
 	}, [isValidForm]);
 
 	const clear = () => {
+		if(emptyFilter) {
+			returnToCatalog();
+		}
+
 		setEmptyFilter('');
 
 		if(inputRef.current) {

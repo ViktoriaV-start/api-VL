@@ -4,8 +4,9 @@ import { TableFoot } from '../TableFoot/Tablefoot';
 import { TableHead } from '../TableHead/TableHead';
 import styles from './Table.module.css';
 
+
 export const Table = memo(function Table() {
-	console.log('TABLE');
+
 	return (
 		<>
 			<div className={ styles['table__wrap'] }>

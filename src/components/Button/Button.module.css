@@ -1,24 +1,28 @@
-.btn, .clear {
-  width: 130px;
-  height: 40px;
-  border-color: rgb(239, 91, 112);
-  color: #ffffff;
-  background-color: rgb(241, 109, 127);
-  border-radius: 3px;
-  font-size: 0.9rem;
+.btn, .clear, .btn-return {
+	width: 130px;
+	height: 40px;
+	border-color: #ef5b70;
+	color: #ffffff;
+	background-color: #ef5b70;
+	border-radius: 3px;
+	font-size: 0.9rem;
 	cursor: pointer;
 }
 
 .clear {
-	border-color: rgb(255, 201, 209);
-  background-color: rgb(255, 201, 209);
+	border-color: #ffc9d1;
+	background-color: #ffc9d1;
+}
+.btn-return {
+	border-color: #4a7989;
+  background-color: #4a7989;
 }
 
 .btn:focus {
-  outline: none;
+	outline: none;
 }
 
 .btn:hover {
-  background-color: rgb(239, 91, 112);
-  box-shadow: 0px 5px 8px 0px rgba(0, 0, 0, 0.16);
+	background-color: rgb(239, 91, 112);
+	box-shadow: 0px 5px 8px 0px rgba(0, 0, 0, 0.16);
 }

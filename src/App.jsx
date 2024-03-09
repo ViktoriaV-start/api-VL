@@ -1,18 +1,17 @@
 import { md5 } from 'js-md5';
-
-
 import './App.css';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+
 import { EMPTY_FILTER, LIMIT, PAGINATION_QUANTITY, PASSWORD } from './config/constants';
 import { useFetching } from './hooks/useFetching';
 import { GetDataService } from './api/GetDataService';
 import { Header } from './components/Header/Header';
 import { ContentContext } from './context/ContentContext';
 import { Table } from './components/Table/Table';
-
 import { Pagination } from './components/Pagination/Pagination';
 import { Filter } from './components/Filter/Filter';
 import { Information } from './components/Information/Information';
+import { TableTitle } from './components/TableTitle/TableTitle';
 
 function App() {
 	const [totalPages, setTotalPages] = useState(0);
@@ -22,9 +21,7 @@ function App() {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pagesToDisplay, setPagesToDisplay] = useState([]);
 	const [emptyFilter, setEmptyFilter] = useState('');
-
-
-
+	const [isFiltration, setIsFiltration] = useState(false);
 
 	const xAuth = useMemo(() => {
 		const timestamp = (new Date()).toISOString().slice(0, 10).replaceAll('-', '');
@@ -57,11 +54,11 @@ function App() {
 			.then(data => {
 				if (data && data.length) {
 					const ids = Array.from(new Set(data));
-					console.log(data);
 					setCurrentContent([]);
 					setCurrentPage(1);
 					setTotalPages(getTotalPages(data.length));
 					setCurrentProductsIds(ids);
+					setIsFiltration(true);
 				} else {
 					setEmptyFilter(EMPTY_FILTER);
 				}
@@ -74,30 +71,28 @@ function App() {
 				if(data && data.length) {
 					const ids = Array.from(new Set(data));
 					setProductsIds(ids);
-					setCurrentProductsIds(ids);
-					console.log(data.length);
+					setCurrentProductsIds([...ids]);
 					setTotalPages(getTotalPages(data.length));
 				}
 			});
 	};
 
 	useEffect(() => {
-		console.log('LOAD');
 		loadPage();
 	}, [currentProductsIds, currentPage]);
 
 	const loadPage = () => {
 		if (!productsIds.length) {
-			console.log('Загрузка Ids');
 			loadProductsIds();
 		}
 
 		if (currentProductsIds.length) {
 
 			setCurrentContent([]);
+
 			const startIdx = (currentPage - 1) * LIMIT;
 			const endIdx = currentPage * LIMIT;
-			console.log('Загрузка страницы: ', currentPage, currentProductsIds.length);
+
 			fetching({'action': 'get_items',
 				'params': {'ids': [...currentProductsIds.slice(startIdx, endIdx)] }})
 				.then((data) => {
@@ -109,18 +104,15 @@ function App() {
 							});
 						}
 					}
-
 				});
 		}
 	};
 
 	useEffect(() => {
-		console.log('Текущая страница: ', currentPage);
 
 		if (totalPages == 1) setPagesToDisplay([]);
 
 		if(totalPages != 1 && currentPage == 1 && totalPages <= PAGINATION_QUANTITY) {
-			setPagesToDisplay([]);
 			setPagesToDisplay([]);
 			for(let i = currentPage-1; i < totalPages; i++) {
 				setPagesToDisplay(prev => [...prev, i+1]);
@@ -156,9 +148,14 @@ function App() {
 				setPagesToDisplay(prev => [...prev, i+1]);
 			}
 		}
-
-
 	}, [currentPage, totalPages, currentProductsIds]);
+
+	const returnToCatalog = () => {
+		setIsFiltration(false);
+		setTotalPages(getTotalPages(productsIds.length));
+		setCurrentProductsIds([...productsIds]);
+		setCurrentPage(1);
+	};
 
 	const getTotalPages = (value) => {
 		return Math.ceil(value/LIMIT);
@@ -168,21 +165,21 @@ function App() {
 	return (
 		<>
 			<Header />
-			<Filter filter={filter} setEmptyFilter={setEmptyFilter} />
-
+			<Filter filter={filter} setEmptyFilter={setEmptyFilter} emptyFilter={emptyFilter} returnToCatalog={returnToCatalog} />
 			<Information isLoading={isLoading} error={error} emptyFilter={emptyFilter} />
 
 			<main className="main">
+				{!isLoading && !emptyFilter && <TableTitle isFiltration={isFiltration} returnToCatalog={returnToCatalog} />}
 				<section className="admin__container">
 					<ContentContext.Provider value={currentContent}>
-						{!isLoading && !emptyFilter && currentContent.length && <Table />}
+						{!isLoading && !emptyFilter && !!currentContent.length && <Table />}
 					</ContentContext.Provider>
-
 				</section>
 
-			</main>
+				{!isLoading && !emptyFilter && !!currentContent.length
+					&& <Pagination pagesToDisplay={pagesToDisplay} totalPages={totalPages} currentPage={currentPage} setPage={setCurrentPage} />}
 
-			{!isLoading && !emptyFilter && currentContent.length && <Pagination pagesToDisplay={pagesToDisplay} totalPages={totalPages} currentPage={currentPage} setPage={setCurrentPage} />}
+			</main>
 
 		</>
 	);

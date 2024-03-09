@@ -1,10 +1,9 @@
-
 import styles from './Pagination.module.css';
 import cn from 'classnames';
 import { PAGINATION_QUANTITY } from '../../config/constants';
 
+
 export const Pagination = ({ pagesToDisplay, totalPages, currentPage, setPage }) => {
-	console.log('Загрузка Pagination');
 
 	const handleNextClick = (e) => {
 		const action = e.target.getAttribute('data-name');
@@ -20,23 +19,18 @@ export const Pagination = ({ pagesToDisplay, totalPages, currentPage, setPage })
 			break;
 		case 'ldots':
 			setPage(pagesToDisplay[0] - 1);
-
 			break;
 		case 'rdots':
 			setPage(pagesToDisplay[4] + 1);
 			break;
-			
 		}
-
 	};
-
-
 
 
 	return (
 		<div className={ styles.pagination }>
 
-			{!!pagesToDisplay.length && !(pagesToDisplay[0] == 1) &&
+			{!!pagesToDisplay.length && (currentPage !== 1) &&
 				<button
 					type="button"
 					className={ styles['pagination__lbtn'] }

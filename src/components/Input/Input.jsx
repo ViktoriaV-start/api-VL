@@ -3,7 +3,6 @@ import cn from 'classnames';
 import styles from './Input.module.css';
 
 export const Input = forwardRef(function Input({ isValid }, ref) {
-	console.log('Загрузка Input');
 	const [inputData, setInputData] = useState('');
 
 	const handleChangeInput = (ev) => {
