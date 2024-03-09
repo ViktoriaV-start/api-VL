@@ -25,6 +25,7 @@ export const App = observer(() => {
 	const [pagesToDisplay, setPagesToDisplay] = useState([]);
 	const [emptyFilter, setEmptyFilter] = useState('');
 	const [isFiltration, setIsFiltration] = useState(false);
+	const [isFetchingInFilter, setFetchingInFilter] = useState(false);
 	const { filterStore } = useContext(StoreContext);
 
 	const xAuth = useMemo(() => {
@@ -44,10 +45,8 @@ export const App = observer(() => {
 	});
 
 	useEffect(() => {
-		if(error && isFiltration) {
-			filter();
-		}
-		if(error && !isFiltration) loadPage();
+		if(error && isFetchingInFilter) filter();
+		if(error && !isFetchingInFilter) loadPage();
 	}, [error]);
 
 	const filter = useCallback(() => {
@@ -56,6 +55,7 @@ export const App = observer(() => {
 
 		setEmptyFilter('');
 		setIsFiltration(true);
+		setFetchingInFilter(true);
 
 		fetching({
 			'action': 'filter',
@@ -95,6 +95,7 @@ export const App = observer(() => {
 		if (!productsIds.length) {
 			loadProductsIds();
 		}
+		setFetchingInFilter(false);
 
 		if (currentProductsIds.length) {
 
