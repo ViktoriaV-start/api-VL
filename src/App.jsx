@@ -1,7 +1,8 @@
 import { md5 } from 'js-md5';
-import './App.css';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
+import './App.css';
 import { EMPTY_FILTER, LIMIT, PAGINATION_QUANTITY, PASSWORD } from './config/constants';
 import { useFetching } from './hooks/useFetching';
 import { GetDataService } from './api/GetDataService';
@@ -12,8 +13,10 @@ import { Pagination } from './components/Pagination/Pagination';
 import { Filter } from './components/Filter/Filter';
 import { Information } from './components/Information/Information';
 import { TableTitle } from './components/TableTitle/TableTitle';
+import { StoreContext } from './context/StoreContext';
 
-function App() {
+
+export const App = observer(() => {
 	const [totalPages, setTotalPages] = useState(0);
 	const [productsIds, setProductsIds] = useState([]);
 	const [currentProductsIds, setCurrentProductsIds] = useState([]);
@@ -22,6 +25,7 @@ function App() {
 	const [pagesToDisplay, setPagesToDisplay] = useState([]);
 	const [emptyFilter, setEmptyFilter] = useState('');
 	const [isFiltration, setIsFiltration] = useState(false);
+	const { filterStore } = useContext(StoreContext);
 
 	const xAuth = useMemo(() => {
 		const timestamp = (new Date()).toISOString().slice(0, 10).replaceAll('-', '');
@@ -40,13 +44,19 @@ function App() {
 	});
 
 	useEffect(() => {
-		if(error) loadPage();
+		if(error && isFiltration) {
+			filter();
+		}
+		if(error && !isFiltration) loadPage();
 	}, [error]);
 
-	const filter = useCallback(({ field, value }) => {
+	const filter = useCallback(() => {
+		const field = filterStore.select;
+		const value = filterStore.input;
 
 		setEmptyFilter('');
-		
+		setIsFiltration(true);
+
 		fetching({
 			'action': 'filter',
 			'params': { [field]: value, }
@@ -58,7 +68,7 @@ function App() {
 					setCurrentPage(1);
 					setTotalPages(getTotalPages(data.length));
 					setCurrentProductsIds(ids);
-					setIsFiltration(true);
+					
 				} else {
 					setEmptyFilter(EMPTY_FILTER);
 				}
@@ -183,6 +193,4 @@ function App() {
 
 		</>
 	);
-}
-
-export default App;
+});

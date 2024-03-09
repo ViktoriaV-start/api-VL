@@ -1,12 +1,15 @@
-import { memo, useEffect, useRef, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import { memo, useContext, useEffect, useRef, useState } from 'react';
 import styles from './Filter.module.css';
 import { Button } from '../Button/Button';
 import { Input } from '../Input/Input';
 import { Select } from '../Select/Select';
+import { StoreContext } from '../../context/StoreContext';
 
 
-export const Filter = memo(function Filter({ filter, setEmptyFilter, emptyFilter, returnToCatalog }) {
+export const Filter = memo(observer(function Filter({ filter, setEmptyFilter, emptyFilter, returnToCatalog }) {
 
+	const { filterStore } = useContext(StoreContext);
 	const [isValidForm, setIsValidForm] = useState({ select: true, input: true });
 
 	const inputRef = useRef(null);
@@ -34,7 +37,10 @@ export const Filter = memo(function Filter({ filter, setEmptyFilter, emptyFilter
 			}
 		}
 
-		if(isValid) filter({ field: formProps.select, value: formProps.input });
+		if(isValid) {
+			filterStore.putValues(formProps.select, formProps.input);
+			filter();
+		}
 	};
 
 	useEffect(() => {
@@ -78,4 +84,4 @@ export const Filter = memo(function Filter({ filter, setEmptyFilter, emptyFilter
 			<Button type="button" className="clear" onClick={clear}>Очистить</Button>
 		</form>
 	);
-});
+}));
