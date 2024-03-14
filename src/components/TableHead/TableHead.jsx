@@ -8,6 +8,9 @@ export const TableHead = memo(function TableHead() {
 		<thead>
 			<tr className={ styles['table__header'] }>
 				<td className={ styles['table__text'] } data-name="name">
+					<span className={ styles['table__btn'] } data-name="name">ID</span>
+				</td>
+				<td className={ styles['table__text'] } data-name="name">
 					<span className={ styles['table__btn'] } data-name="name">Название</span>
 				</td>
 				<td className={ styles['table__text'] } data-name="brand">

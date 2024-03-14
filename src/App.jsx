@@ -161,12 +161,12 @@ export const App = observer(() => {
 		}
 	}, [currentPage, totalPages, currentProductsIds]);
 
-	const returnToCatalog = () => {
+	const returnToCatalog = useCallback(() => {
 		setIsFiltration(false);
 		setTotalPages(getTotalPages(productsIds.length));
 		setCurrentProductsIds([...productsIds]);
 		setCurrentPage(1);
-	};
+	}, [productsIds]);
 
 	const getTotalPages = (value) => {
 		return Math.ceil(value/LIMIT);

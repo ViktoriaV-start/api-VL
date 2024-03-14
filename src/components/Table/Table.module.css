@@ -5,6 +5,7 @@
 
 .table__wrap {
 	width: 100vw;
+	min-width: 400px;
 	max-width: 1200px;
   border-radius: 15px;
   margin-top: 1rem;

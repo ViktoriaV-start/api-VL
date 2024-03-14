@@ -16,7 +16,8 @@ export const TableBody = () => {
 			{content.map((elem) => {
 				return (
 					<tr key={elem.id} className={ styles['table__tr'] }>
-						<td className={ styles['table__product'] + ' ' + styles['table__client'] } >{elem.product}</td>
+						<td className={ styles['table__id'] } >{elem.id}</td>
+						<td className={ styles['table__product'] } >{elem.product}</td>
 						<td className={ styles['table__data'] }>{elem.brand}</td>
 						<td className={ styles['table__data'] + ' ' + styles['table__sp'] }>{getPriceString(+elem.price)}</td>
 					</tr>
